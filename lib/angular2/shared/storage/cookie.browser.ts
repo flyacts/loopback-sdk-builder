@@ -31,9 +31,8 @@ export class CookieBrowser {
         return null;
       }
 
-      this.cookies[key] = this.parse(cookie.split('=').slice(1).join('='));
+      this.cookies[key] = this.parse(decodeURI(cookie.split('=').slice(1).join('=')));
     }
-
     return this.cookies[key];
   }
   /**
@@ -47,7 +46,7 @@ export class CookieBrowser {
    **/
   set(key: string, value: any, expires?: Date): void {
     this.cookies[key] = value;
-    let cookie = `${key}=${value}; path=/${expires ? `; expires=${ expires.toUTCString() }` : ''}`;
+    let cookie = `${key}=${encodeURI(value)}; path=/${expires ? `; expires=${ expires.toUTCString() }` : ''}`;
     window.document.cookie = cookie;
   }
   /**
@@ -71,7 +70,7 @@ export class CookieBrowser {
    **/
   private parse(value: any) {
     try {
-        return JSON.parse(value);
+        return JSON.parse(decodeURI(value));
     } catch (e) {
         return value;
     }
